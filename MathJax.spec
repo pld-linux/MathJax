@@ -1,14 +1,15 @@
 Summary:	JavaScript display engine for mathematics
-#Summary(pl.UTF-8):	
+#Summary(pl.UTF-8):
 Name:		MathJax
 Version:	1.0.1a
 Release:	1
 License:	Apache v2.0
 Group:		Applications/WWW
-Source0:	http://dl.sourceforge.net/mathjax/%{name}-v%{version}.zip
+Source0:	http://downloads.sourceforge.net/mathjax/%{name}-v%{version}.zip
 # Source0-md5:	b93c1f1e26a898faee072ab7aec57251
 URL:		http://www.mathjax.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	unzip
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
@@ -22,7 +23,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 MathJax is an open source JavaScript display engine for mathematics
-that works in all modern browsers. 
+that works in all modern browsers.
 
 #%description -l pl.UTF-8
 
