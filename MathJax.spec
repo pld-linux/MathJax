@@ -1,12 +1,13 @@
 Summary:	JavaScript display engine for mathematics
 #Summary(pl.UTF-8):
 Name:		MathJax
-Version:	1.0.1a
+Version:	1.1a
 Release:	1
 License:	Apache v2.0
 Group:		Applications/WWW
-Source0:	http://downloads.sourceforge.net/mathjax/%{name}-v%{version}.zip
-# Source0-md5:	b93c1f1e26a898faee072ab7aec57251
+# https://github.com/mathjax/MathJax/zipball/v1.1a
+Source0:	%{name}-%{version}.zip
+# Source0-md5:	63a0401cbf84bbeb173072d77c127299
 URL:		http://www.mathjax.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	unzip
@@ -28,7 +29,7 @@ that works in all modern browsers.
 #%description -l pl.UTF-8
 
 %prep
-%setup -q -n %{name}
+%setup -q -n mathjax-MathJax-f5cd294
 
 cat > apache.conf <<'EOF'
 Alias /%{name} %{_appdir}
@@ -76,7 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.txt docs test unpacked
+%doc README.* docs test unpacked
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
