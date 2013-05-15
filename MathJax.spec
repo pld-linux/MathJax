@@ -1,7 +1,7 @@
 Summary:	JavaScript display engine for mathematics
 Name:		MathJax
 Version:	1.1a
-Release:	2
+Release:	3
 License:	Apache v2.0
 Group:		Applications/WWW
 # https://github.com/mathjax/MathJax/zipball/v1.1a
@@ -13,7 +13,7 @@ BuildRequires:	unzip
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
-Conflicts:	apache < 2.4.0-1
+Conflicts:	apache-base < 2.4.0-1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
