@@ -1,8 +1,7 @@
 Summary:	JavaScript display engine for mathematics
-#Summary(pl.UTF-8):
 Name:		MathJax
 Version:	1.1a
-Release:	1
+Release:	2
 License:	Apache v2.0
 Group:		Applications/WWW
 # https://github.com/mathjax/MathJax/zipball/v1.1a
@@ -14,6 +13,7 @@ BuildRequires:	unzip
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
+Conflicts:	apache < 2.4.0-1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -26,8 +26,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 MathJax is an open source JavaScript display engine for mathematics
 that works in all modern browsers.
 
-#%description -l pl.UTF-8
-
 %prep
 %setup -q -n mathjax-MathJax-f5cd294
 
@@ -35,6 +33,13 @@ cat > apache.conf <<'EOF'
 Alias /%{name} %{_appdir}
 <Directory %{_appdir}>
 	Allow from all
+</Directory>
+EOF
+
+cat > httpd.conf <<'EOF'
+Alias /%{name} %{_appdir}
+<Directory %{_appdir}>
+	Require all granted
 </Directory>
 EOF
 
@@ -60,10 +65,10 @@ cp -a lighttpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/lighttpd.conf
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerin -- lighttpd
