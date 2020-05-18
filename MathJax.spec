@@ -1,4 +1,5 @@
 Summary:	JavaScript display engine for mathematics
+Summary(pl.UTF-8):	Oparty na JavaScripcie silnik wyświetlania wzorów matematycznych
 Name:		MathJax
 Version:	1.1a
 Release:	3
@@ -7,7 +8,7 @@ Group:		Applications/WWW
 # https://github.com/mathjax/MathJax/zipball/v1.1a
 Source0:	%{name}-%{version}.zip
 # Source0-md5:	63a0401cbf84bbeb173072d77c127299
-URL:		http://www.mathjax.org/
+URL:		https://www.mathjax.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	unzip
 Requires:	webapps
@@ -25,6 +26,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 MathJax is an open source JavaScript display engine for mathematics
 that works in all modern browsers.
+
+%description -l pl.UTF-8
+MathJax to mający otwarte źródła, oparty na JavaScripcie silnik
+wyświetlania wzorów matematycznych, działający we wszystkich
+współczesnych przeglądarkach.
 
 %prep
 %setup -q -n mathjax-MathJax-f5cd294
