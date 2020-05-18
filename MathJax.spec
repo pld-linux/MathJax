@@ -1,3 +1,4 @@
+# TODO: unbundle fonts (eot, otf, woff formats)
 Summary:	JavaScript display engine for mathematics
 Summary(pl.UTF-8):	Oparty na JavaScripcie silnik wyświetlania wzorów matematycznych
 Name:		MathJax
@@ -10,6 +11,7 @@ Source0:	https://github.com/mathjax/MathJax/archive/%{version}/%{name}-%{version
 # Source0-md5:	6cea1e2445ba7ab478be07463bca539c
 URL:		https://www.mathjax.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
+Requires:	%{name}-base = %{version}-%{release}
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
@@ -26,10 +28,32 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 MathJax is an open source JavaScript display engine for mathematics
 that works in all modern browsers.
 
+This package exposes MathJax via web server.
+
 %description -l pl.UTF-8
 MathJax to mający otwarte źródła, oparty na JavaScripcie silnik
 wyświetlania wzorów matematycznych, działający we wszystkich
 współczesnych przeglądarkach.
+
+Ten pakiet udostępnia MathJax przez serwer WWW.
+
+%package base
+Summary:	JavaScript display engine for mathematics - local installation
+Summary(pl.UTF-8):	Oparty na JavaScripcie silnik wyświetlania wzorów matematycznych - instalacja lokalna
+Group:		Applications/WWW
+
+%description base
+MathJax is an open source JavaScript display engine for mathematics
+that works in all modern browsers.
+
+This package allows to use MathJax through local files.
+
+%description base -l pl.UTF-8
+MathJax to mający otwarte źródła, oparty na JavaScripcie silnik
+wyświetlania wzorów matematycznych, działający we wszystkich
+współczesnych przeglądarkach.
+
+Ten pakiet pozwala używać silnika przez pliki lokalne.
 
 %package source
 Summary:	Unpacked source code of MathJax engine
@@ -44,6 +68,10 @@ Rozpakowany kod źródłowy silnika MathJax.
 
 %prep
 %setup -q
+
+# fixup separation of unpacked .js files
+install -d unpacked/fonts/HTML-CSS/TeX
+%{__mv} fonts/HTML-CSS/TeX/png/unpacked unpacked/fonts/HTML-CSS/TeX/png
 
 cat > apache.conf <<'EOF'
 Alias /%{name} %{_appdir}
@@ -69,7 +97,9 @@ EOF
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
 
-cp -pr MathJax.js config extensions fonts jax $RPM_BUILD_ROOT%{_appdir}
+cp -pr MathJax.js config extensions fonts jax localization $RPM_BUILD_ROOT%{_appdir}
+# drop messages documentation
+%{__rm} -r $RPM_BUILD_ROOT%{_appdir}/localization/qqq
 
 cp -p apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 cp -p apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
@@ -102,12 +132,82 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.*
+%doc README.md
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lighttpd.conf
-%{_appdir}
+
+%files base
+%defattr(644,root,root,755)
+%dir %{_appdir}
+%{_appdir}/MathJax.js
+%{_appdir}/config
+%{_appdir}/extensions
+%dir %{_appdir}/fonts
+%dir %{_appdir}/fonts/HTML-CSS
+%{_appdir}/fonts/HTML-CSS/Asana-Math
+%{_appdir}/fonts/HTML-CSS/Gyre-Pagella
+%{_appdir}/fonts/HTML-CSS/Gyre-Termes
+%{_appdir}/fonts/HTML-CSS/Latin-Modern
+%{_appdir}/fonts/HTML-CSS/Neo-Euler
+%{_appdir}/fonts/HTML-CSS/STIX-Web
+%dir %{_appdir}/fonts/HTML-CSS/TeX
+# MathJax_{AMS,Caligraphic,Fraktur,Main,Math,SansSerif,Script,Size1,Size2,Size4,Typewriter,Vector,WinIE6}
+%{_appdir}/fonts/HTML-CSS/TeX/eot
+%{_appdir}/fonts/HTML-CSS/TeX/otf
+%{_appdir}/fonts/HTML-CSS/TeX/png
+%{_appdir}/fonts/HTML-CSS/TeX/svg
+%{_appdir}/fonts/HTML-CSS/TeX/woff
+%{_appdir}/jax
+%dir %{_appdir}/localization
+%lang(ar) %{_appdir}/localization/ar
+%lang(ast) %{_appdir}/localization/ast
+%lang(bcc) %{_appdir}/localization/bcc
+%lang(bg) %{_appdir}/localization/bg
+%lang(br) %{_appdir}/localization/br
+%lang(ca) %{_appdir}/localization/ca
+%lang(cdo) %{_appdir}/localization/cdo
+%lang(ce) %{_appdir}/localization/ce
+%lang(cs) %{_appdir}/localization/cs
+%lang(cy) %{_appdir}/localization/cy
+%lang(da) %{_appdir}/localization/da
+%lang(de) %{_appdir}/localization/de
+%lang(diq) %{_appdir}/localization/diq
+%{_appdir}/localization/en
+%lang(eo) %{_appdir}/localization/eo
+%lang(es) %{_appdir}/localization/es
+%lang(fa) %{_appdir}/localization/fa
+%lang(fi) %{_appdir}/localization/fi
+%lang(fr) %{_appdir}/localization/fr
+%lang(gl) %{_appdir}/localization/gl
+%lang(he) %{_appdir}/localization/he
+%lang(ia) %{_appdir}/localization/ia
+%lang(it) %{_appdir}/localization/it
+%lang(ja) %{_appdir}/localization/ja
+%lang(kn) %{_appdir}/localization/kn
+%lang(ko) %{_appdir}/localization/ko
+%lang(lb) %{_appdir}/localization/lb
+%lang(lki) %{_appdir}/localization/lki
+%lang(lt) %{_appdir}/localization/lt
+%lang(mk) %{_appdir}/localization/mk
+%lang(nl) %{_appdir}/localization/nl
+%lang(oc) %{_appdir}/localization/oc
+%lang(pl) %{_appdir}/localization/pl
+%lang(pt) %{_appdir}/localization/pt
+%lang(pt_BR) %{_appdir}/localization/pt-br
+%lang(ru) %{_appdir}/localization/ru
+%lang(scn) %{_appdir}/localization/scn
+%lang(sco) %{_appdir}/localization/sco
+%lang(sk) %{_appdir}/localization/sk
+%lang(sl) %{_appdir}/localization/sl
+%lang(sv) %{_appdir}/localization/sv
+%lang(th) %{_appdir}/localization/th
+%lang(tr) %{_appdir}/localization/tr
+%lang(uk) %{_appdir}/localization/uk
+%lang(vi) %{_appdir}/localization/vi
+%lang(zh_CN) %{_appdir}/localization/zh-hans
+%lang(zh_TW) %{_appdir}/localization/zh-hant
 %{_examplesdir}/%{name}-%{version}
 
 %files source
